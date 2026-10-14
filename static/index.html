@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Anti-Gravity: Quantum Core | Telegram Mini App</title>
+  
+  <!-- Telegram WebApp SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Matter.js 2D Physics Engine -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+
+  <!-- Game Stylesheet -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <div id="game-container">
+    <!-- Physics rendering canvas -->
+    <canvas id="physics-canvas"></canvas>
+
+    <!-- Overlay particles and effects canvas -->
+    <canvas id="particles-canvas"></canvas>
+
+    <!-- Heads-Up Display (HUD) -->
+    <div class="hud-layer">
+      <!-- Top Bar -->
+      <div class="hud-top">
+        <div class="user-badge" id="user-badge">
+          <div class="user-avatar-badge" id="user-avatar-initial">C</div>
+          <span id="hud-username">Commander</span>
+        </div>
+
+        <div class="stats-card">
+          <div class="stat-item">
+            <span class="stat-label">Energy</span>
+            <span class="stat-value score" id="hud-score">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Combo</span>
+            <span class="stat-value combo" id="hud-combo">x1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gravity Mode Banner -->
+      <div id="gravity-indicator" class="gravity-indicator normal">
+        <span id="gravity-text">⬇️ GRAVITY: DOWN (1.0G)</span>
+      </div>
+
+      <!-- Bottom Control Bar -->
+      <div class="hud-bottom">
+        <div class="controls-wrapper">
+          <button id="btn-leaderboard" class="btn-icon-action" title="Leaderboard">
+            🏆
+          </button>
+
+          <button id="btn-gravity-toggle" class="btn-gravity-toggle">
+            <span>🌀 GRAVITY SWITCH</span>
+          </button>
+
+          <button id="btn-audio-toggle" class="btn-icon-action" title="Sound">
+            🔊
+          </button>
+        </div>
+        <div class="action-hint">Tap Screen to Fire Micro-Thrusters • Space to Flip Gravity</div>
+      </div>
+    </div>
+
+    <!-- Game Over Modal -->
+    <div id="gameover-modal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-title">CORE DESTABILIZED</div>
+        <div class="modal-subtitle">Containment breach detected!</div>
+
+        <div class="score-highlight" id="final-score">0</div>
+        <div class="score-sub" id="final-gems">Quantum Crystals: 0</div>
+
+        <button id="btn-restart" class="btn-primary">⚡ RE-ENERGIZE & RETRY</button>
+      </div>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div id="leaderboard-modal" class="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-title">QUANTUM RANKS</div>
+        <div class="modal-subtitle">Top Telemetry across the Cosmos</div>
+
+        <div class="leaderboard-list" id="leaderboard-content">
+          <!-- Populated dynamically -->
+        </div>
+
+        <button id="btn-leaderboard-restart" class="btn-primary">🚀 PLAY NOW</button>
+        <button id="btn-close-leaderboard" class="btn-secondary">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Scripts -->
+  <script src="/static/js/tg.js"></script>
+  <script src="/static/js/game.js"></script>
+  <script>
+    // Audio toggle button listener
+    const audioBtn = document.getElementById('btn-audio-toggle');
+    audioBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (window.game && window.game.sound) {
+        window.game.sound.enabled = !window.game.sound.enabled;
+        audioBtn.innerText = window.game.sound.enabled ? '🔊' : '🔇';
+        window.tgBridge?.hapticSelection();
+      }
+    });
+  </script>
+</body>
+</html>
